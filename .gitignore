@@ -1,0 +1,10 @@
+# Compiled files
+*.tfstate
+*.tfstate.*.backup
+*.tfstate.backup
+
+# Module directory
+.terraform/
+
+# Files that shouldn't be committed
+terraform.tfvars
