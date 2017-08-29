@@ -7,7 +7,7 @@ variable "aws_account_id" {
 
 variable "state_lock_table_name" {
   type    = "string"
-  default = "terraform_state_lock"
+  default = "terraform_state_locks"
 }
 
 variable "state_lock_table_read_capacity" {
