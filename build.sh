@@ -21,8 +21,9 @@ function create_container_volume() {
 function terraform() {
   local url="https://raw.githubusercontent.com/lone-cyprus/docker-bin/master/terraform"
   if [[ "${CI}" == "true" ]]; then
-    create_container_volume ${PROJECT_NAME} . ${DOCKER_TERRAFORM_WORKING_DIR}
-    curl -s $url | VERSION=${DOCKER_TERRAFORM_VERSION} SHARED_VOLUME=${PROJECT_NAME} bash -s -- "$@"
+    local volume=${PROJECT_NAME}-terraform
+    create_container_volume ${volume} . ${DOCKER_TERRAFORM_WORKING_DIR}
+    curl -s $url | VERSION=${DOCKER_TERRAFORM_VERSION} SHARED_VOLUME=${volume} bash -s -- "$@"
   else
     curl -s $url | VERSION=${DOCKER_TERRAFORM_VERSION} bash -s -- "$@"
   fi
