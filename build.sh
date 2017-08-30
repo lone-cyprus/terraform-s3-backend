@@ -4,6 +4,7 @@ set -e
 PROJECT_NAME=terraform-s3-backend
 
 DOCKER_TERRAFORM_VERSION=0.10.2
+DOCKER_TERRAFORM_WORKING_DIR=/data
 
 function create_container_volume() {
   local volume=$1
@@ -20,9 +21,10 @@ function create_container_volume() {
 function terraform() {
   local url="https://raw.githubusercontent.com/lone-cyprus/docker-bin/master/terraform"
   if [[ "${CI}" == "true" ]]; then
+    create_container_volume ${PROJECT_NAME} . ${DOCKER_TERRAFORM_WORKING_DIR}
     curl -s $url | VERSION=${DOCKER_TERRAFORM_VERSION} SHARED_VOLUME=${PROJECT_NAME} bash -s -- "$@"
   else
-    curl -s $url | VERSION=0.10.2 bash -s -- "$@"
+    curl -s $url | VERSION=${DOCKER_TERRAFORM_VERSION} bash -s -- "$@"
   fi
 }
 
