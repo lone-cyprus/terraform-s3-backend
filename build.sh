@@ -3,8 +3,7 @@ set -e
 
 PROJECT_NAME=terraform-s3-backend
 
-DOCKER_TERRAFORM_IMAGE_NAME=hashicorp/terraform:0.10.2
-DOCKER_TERRAFORM_WORKING_DIR=/data
+DOCKER_TERRAFORM_VERSION=0.10.2
 
 function create_container_volume() {
   local volume=$1
@@ -19,23 +18,12 @@ function create_container_volume() {
 }
 
 function terraform() {
-  [[ -z "${AWS_ACCESS_KEY_ID}" ]] && { echo "\$AWS_ACCESS_KEY_ID environment variable is empty" ; return 1; }
-  [[ -z "${AWS_SECRET_ACCESS_KEY}" ]] && { echo "\$AWS_SECRET_ACCESS_KEY environment variable is empty" ; return 1; }
-  [[ -z "${AWS_DEFAULT_REGION}" ]] && { echo "\$AWS_DEFAULT_REGION environment variable is empty" ; return 1; }
-
-  local volume_option="-v "$PWD":${DOCKER_TERRAFORM_WORKING_DIR}"
+  local url="https://raw.githubusercontent.com/lone-cyprus/docker-bin/master/terraform"
   if [[ "${CI}" == "true" ]]; then
-    create_container_volume ${PROJECT_NAME} . ${DOCKER_TERRAFORM_WORKING_DIR}
-    volume_option="--volumes-from ${PROJECT_NAME}"
-  fi 
-
-  docker run --rm -t $(tty &>/dev/null && echo "-i") \
-             -e "AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}" \
-             -e "AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}" \
-             -e "AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION}" \
-             ${volume_option} \
-             -w ${DOCKER_TERRAFORM_WORKING_DIR} \
-             ${DOCKER_TERRAFORM_IMAGE_NAME} "$@"
+    curl -s $url | VERSION=${DOCKER_TERRAFORM_VERSION} SHARED_VOLUME=${PROJECT_NAME} bash -s -- "$@"
+  else
+    curl -s $url | VERSION=0.10.2 bash -s -- "$@"
+  fi
 }
 
 function setup_infrastructure() {
