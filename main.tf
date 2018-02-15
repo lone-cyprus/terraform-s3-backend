@@ -32,7 +32,7 @@ data "template_file" "state_bucket" {
 
 resource "aws_iam_policy" "state_bucket" {
   name        = "${var.state_bucket_policy_name}"
-  path        = "${var.state_bucket_policy_path}"
+  path        = "/${var.environment}/"
   description = "Privileges that Terraform requires to use the S3 state bucket"
 
   policy = "${data.template_file.state_bucket.rendered}"
@@ -67,8 +67,27 @@ data "template_file" "state_lock_table" {
 
 resource "aws_iam_policy" "state_lock_table" {
   name        = "${var.state_lock_policy_name}"
-  path        = "${var.state_lock_policy_path}"
+  path        = "/${var.environment}/"
   description = "Privileges that Terraform requires to use the DynamoDB state lock table"
 
   policy = "${data.template_file.state_lock_table.rendered}"
+}
+
+#######################################################################################
+# Terraform State Full Access Group
+#######################################################################################
+
+resource "aws_iam_group" "state" {
+  name = "${var.state_group_name}"
+  path = "/${var.environment}/"
+}
+
+resource "aws_iam_group_policy_attachment" "state_bucket" {
+  group      = "${aws_iam_group.state.name}"
+  policy_arn = "${aws_iam_policy.state_bucket.arn}"
+}
+
+resource "aws_iam_group_policy_attachment" "state_lock_table" {
+  group      = "${aws_iam_group.state.name}"
+  policy_arn = "${aws_iam_policy.state_lock_table.arn}"
 }

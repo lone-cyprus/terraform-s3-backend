@@ -1,3 +1,8 @@
+variable "environment" {
+  default = "production"
+}
+
+
 # AWS
 
 variable "aws_account_id" {
@@ -42,17 +47,12 @@ variable "state_lock_policy_name" {
   default = "DynamoDBTerraformStateLockFullAccess"
 }
 
-variable "state_lock_policy_path" {
-  type    = "string"
-  default = "/"
-}
-
 variable "state_bucket_policy_name" {
   type    = "string"
   default = "S3TerraformStateFullAccess"
 }
 
-variable "state_bucket_policy_path" {
+variable "state_group_name" {
   type    = "string"
-  default = "/"
+  default = "TerraformStateFullAccess"
 }
