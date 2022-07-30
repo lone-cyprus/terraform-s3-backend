@@ -13,15 +13,18 @@
 #       }
 #     }
 
-resource "aws_s3_bucket" "state" {
-  bucket = "${var.state_bucket_name}"
-  region = "${var.state_bucket_region}"
-  acl    = "private"
+# For some reason (with the ancient version of Terraform we're using) we can't import 
+# this S3 bucket when Terraform becomes orphaned.  Commenting out for now.
 
-  versioning {
-    enabled = true
-  }
-}
+# resource "aws_s3_bucket" "state" {
+#   bucket = "${var.state_bucket_name}"
+#   region = "${var.state_bucket_region}"
+#   acl    = "private"
+#
+#   versioning {
+#     enabled = true
+#   }
+# }
 
 data "template_file" "state_bucket" {
   template = "${file("policies/state_bucket.json")}"
