@@ -51,5 +51,9 @@ Providing that you have completed the steps under "Getting Started", all you nee
 > ./build.sh
 ```
 
+## Troubleshooting
+
+* The permissions created here should be good enough for Terraform to run.  However, if you install another tool like Dome9, it might prevent you from interacting with the S3 (state) bucket.  If you suspect something like that is happening then consult the [IAM Policy Simulator](https://policysim.aws.amazon.com/home/index.jsp).
+
 ## License
 See [LICENSE](LICENSE).

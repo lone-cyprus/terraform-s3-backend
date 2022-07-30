@@ -54,5 +54,5 @@ elif [[ "$1" == "--import" ]]; then
   #import_repository_into_terraform_state "aws_iam_policy.state_lock_table" "arn:aws:iam::295989730825:policy/production/DynamoDBTerraformStateLockFullAccess"
 
   # NOTE: the following returns "Forbidden"
-  # import_repository_into_terraform_state "aws_s3_bucket.state" "lonecyprus-terraform-state"
+  #import_repository_into_terraform_state "aws_s3_bucket.state" "lonecyprus-terraform-state"
 fi
